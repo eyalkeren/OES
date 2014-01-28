@@ -1,4 +1,3 @@
-
 /* This software is available to you under a choice of one of two
 * licenses.  You may choose to be licensed under the terms of the GNU
 * General Public License (GPL) Version 2, available from the file
@@ -29,6 +28,10 @@
 /************************************************************************************************************/
 /**************************** enum ************************************************************************/
 
+#ifndef __OES_TYPES_H__
+#define __OES_TYPES_H__
+
+
 enum oes_access_cmd {
 	OES_ACCESS_CMD_ADD       	= 1,
 	OES_ACCESS_CMD_EDIT      	= 2,
@@ -40,9 +43,9 @@ enum oes_access_cmd {
 	OES_ACCESS_CMD_DISABLE   	= 11,
 	OES_ACCESS_CMD_CREATE    	= 12,
 	OES_ACCESS_CMD_DESTROY   	= 13,
-	OES_ACCESS_CMD_GET       	= 14,
-	OES_ACCESS_CMD_GET_FIRST    = 15,
-	OES_ACCESS_CMD_GET_NEXT     = 16,
+	OES_ACCESS_CMD_GET        	= 14,
+	OES_ACCESS_CMD_GET_FIRST	= 15,
+	OES_ACCESS_CMD_GET_NEXT		= 16,
 };
 
 enum oes_span_type {
@@ -152,20 +155,20 @@ enum oes_event{
 };
 	
 enum oes_l2_packet{
-	OES_PACKET_STP, 				    /**< ETHERNET L2 STP */
-	OES_PACKET_LACP,				    /**< ETHERNET L2 LACP */
-	OES_PACKET_EAPOL,				 	/**< ETHERNET L2 EAPOL */
-	OES_PACKET_LLDP,				    /**< ETHERNET L2 LLDP */
-	OES_PACKET_MMRP,				    /**< ETHERNET L2 MMRP */
-	OES_PACKET_MVRP,				    /**< ETHERNET L2 MVRP */
-	OES_PACKET_RPVST,					/**< ETHERNET L2 RPVST */
-	OES_PACKET_IGMP_TYPE_QUERY,			/**< ETHERNET L2 IGMP QUERY */
+	OES_PACKET_STP, 			/**< ETHERNET L2 STP */
+	OES_PACKET_LACP,			/**< ETHERNET L2 LACP */
+	OES_PACKET_EAPOL,			/**< ETHERNET L2 EAPOL */
+	OES_PACKET_LLDP,			/**< ETHERNET L2 LLDP */
+	OES_PACKET_MMRP,			/**< ETHERNET L2 MMRP */
+	OES_PACKET_MVRP,			/**< ETHERNET L2 MVRP */
+	OES_PACKET_RPVST,			/**< ETHERNET L2 RPVST */
+	OES_PACKET_IGMP_TYPE_QUERY,		/**< ETHERNET L2 IGMP QUERY */
 	OES_PACKET_IGMP_TYPE_V1_REPORT,		/**< ETHERNET L2 IGMP V1_REPORT */
 	OES_PACKET_IGMP_TYPE_V2_REPORT,		/**< ETHERNET L2 IGMP V2_REPORT */
 	OES_PACKET_IGMP_TYPE_V2_LEAVE,		/**< ETHERNET L2 IGMP V2_LEAVE */
 	OES_PACKET_IGMP_TYPE_V3_REPORT,		/**< ETHERNET L2 IGMP V3_REPORT */
-	OES_PACKET_PACKET_SAMPLING 			/**< ETHERNET L2 PACKET_SAMPLING */
-    OES_PACKET_TRAP_ACL                 /**< ACL trap   */
+	OES_PACKET_PACKET_SAMPLING, 		/**< ETHERNET L2 PACKET_SAMPLING */
+    OES_PACKET_TRAP_ACL         		/**< ACL trap   */
 };
 
 enum oes_l3_packet{
@@ -277,12 +280,12 @@ struct oes_l3_interface{
 	enum oes_interface_type type;		/**< Router Interface type vlan or router port  */
 	union {
 		struct {
-			int br_id br;		/**< bridge ID */
+			int br_id;		/**< bridge ID */
 			unsigned short vlan;	/**< VLAN ID */
 		} vlan;				/**< VLAN Router Interface */
 		struct {
 			unsigned long port;	/**< Port */
-		} port;			
+		}port ;
 	} ifc;					/**< Router Interface parameters */
 };
 
@@ -313,7 +316,7 @@ struct oes_neigh_data  {
 };
  
 struct oes_ip_prefix {
-	struct oes_ip_addr;
+	struct oes_ip_addr prefix;
 	unsigned int prefix_len;
 };
 
@@ -343,12 +346,6 @@ struct oes_mc_route_key {
 };
 
 
-struct oes_mc_route_data {
-    struct oes_mc_router_action  action;
-    unsigned int * rif_list,
-    unsigned short rif_cnt,
-};
-
 struct oes_mc_router_action {
 	unsigned char  enable_assert;
 	unsigned char  enable_rpf;
@@ -356,18 +353,10 @@ struct oes_mc_router_action {
 	enum oes_router_action  action; 			
 };
 
-struct oes_event_info{
-	enum oes_event 		event_id /**<!event ID */
-	union oes_event_data		event_info; /**<! event info */
-};
-
-
-
-
-
-union oes_event_data{
-	struct oes_event_port port_event;/**<! port up/down event data */
-    struct oes_event_port port_event;/**<! FDB  event data */
+struct oes_mc_route_data {
+    struct oes_mc_router_action  action;
+    unsigned int * rif_list;
+    unsigned short rif_cnt;
 };
 
 
@@ -383,7 +372,17 @@ struct oes_event_fdb{
     unsigned long log_port;                  /**< Logical port */
 };
 
+union oes_event_data{
+    struct oes_event_port port_event;/**<! port up/down event data */
+    struct oes_event_fdb fdb_event;/**<! FDB  event data */
+};
 
+struct oes_event_info{
+	enum oes_event 		event_id /**<!event ID */
+	union oes_event_data		event_info; /**<! event info */
+};
+
+#endif /* __OES_TYPES_H__ */
 
 
 
